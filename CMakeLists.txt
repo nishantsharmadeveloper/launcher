@@ -5,11 +5,9 @@ project(Launcher)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Windows GUI application (no console window)
 set(CMAKE_WIN32_EXECUTABLE TRUE)
 
 
-# All C++ source files
 set(SOURCES
 
     src/main.cpp
@@ -26,7 +24,6 @@ set(SOURCES
 )
 
 
-# Header files (optional but helps IDEs)
 set(HEADERS
 
     src/App.h
@@ -45,10 +42,11 @@ add_executable(
     Launcher
     ${SOURCES}
     ${HEADERS}
+
+    resources/resource.rc
 )
 
 
-# Include src folder so #include "App.h" works
 target_include_directories(
     Launcher
     PRIVATE
@@ -56,7 +54,14 @@ target_include_directories(
 )
 
 
-# Windows API libraries
+# Fix Windows min/max macro conflict
+target_compile_definitions(
+    Launcher
+    PRIVATE
+    NOMINMAX
+)
+
+
 target_link_libraries(
     Launcher
 
@@ -65,16 +70,5 @@ target_link_libraries(
     advapi32
     gdi32
     comctl32
+    dwmapi
 )
-
-
-# Add application resources
-if(EXISTS "${CMAKE_SOURCE_DIR}/resources/resource.rc")
-
-    target_sources(
-        Launcher
-        PRIVATE
-        resources/resource.rc
-    )
-
-endif()
