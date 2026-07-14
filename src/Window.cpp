@@ -1,8 +1,12 @@
+#define NOMINMAX
+
 #include "Window.h"
 #include "Utils.h"
+
 #include <commctrl.h>
 #include <dwmapi.h>
 #include <windowsx.h>
+#include <algorithm>
 
 #pragma comment(lib, "comctl32.lib")
 #pragma comment(lib, "dwmapi.lib")
@@ -38,7 +42,7 @@ void Window::RegisterWindowClass(HINSTANCE instance)
     wc.style = CS_HREDRAW | CS_VREDRAW | CS_DROPSHADOW;
     wc.lpfnWndProc = WndProc;
     wc.hInstance = instance;
-    wc.hCursor = LoadCursorW(nullptr, IDC_ARROW);
+    wc.hCursor = LoadCursorW(nullptr, MAKEINTRESOURCEW(32512));
     wc.hbrBackground = nullptr; // we paint the background ourselves
     wc.lpszClassName = kClassName;
     RegisterClassExW(&wc);
@@ -323,7 +327,10 @@ void Window::OnPaint()
     // Results.
     SetBkMode(memDC, TRANSPARENT);
     int y = kSearchBoxHeight;
-    int visibleRows = min(static_cast<int>(m_results.size()), kMaxVisibleRows);
+    int visibleRows = std::min(
+    static_cast<int>(m_results.size()),
+    kMaxVisibleRows
+);
 
     for (int i = 0; i < visibleRows; ++i)
     {
