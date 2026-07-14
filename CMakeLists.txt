@@ -5,28 +5,38 @@ project(Launcher)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Create Windows GUI application
+# Windows GUI application (no console window)
 set(CMAKE_WIN32_EXECUTABLE TRUE)
 
 
-# Source files
+# All C++ source files
 set(SOURCES
 
     src/main.cpp
-    src/App.cpp
 
-    # Add more cpp files here later
-    # src/Window.cpp
-    # src/KeyboardHook.cpp
-    # src/SearchEngine.cpp
+    src/App.cpp
+    src/Window.cpp
+    src/KeyboardHook.cpp
+    src/ProgramIndexer.cpp
+    src/SearchEngine.cpp
+    src/Settings.cpp
+    src/TrayIcon.cpp
+    src/Utils.cpp
 
 )
 
 
-# Resource file
-set(RESOURCES
+# Header files (optional but helps IDEs)
+set(HEADERS
 
-    resources/resource.rc
+    src/App.h
+    src/Window.h
+    src/KeyboardHook.h
+    src/ProgramIndexer.h
+    src/SearchEngine.h
+    src/Settings.h
+    src/TrayIcon.h
+    src/Utils.h
 
 )
 
@@ -34,11 +44,11 @@ set(RESOURCES
 add_executable(
     Launcher
     ${SOURCES}
-    ${RESOURCES}
+    ${HEADERS}
 )
 
 
-# Header location
+# Include src folder so #include "App.h" works
 target_include_directories(
     Launcher
     PRIVATE
@@ -46,8 +56,7 @@ target_include_directories(
 )
 
 
-# Windows libraries
-
+# Windows API libraries
 target_link_libraries(
     Launcher
 
@@ -55,4 +64,17 @@ target_link_libraries(
     shell32
     advapi32
     gdi32
+    comctl32
 )
+
+
+# Add application resources
+if(EXISTS "${CMAKE_SOURCE_DIR}/resources/resource.rc")
+
+    target_sources(
+        Launcher
+        PRIVATE
+        resources/resource.rc
+    )
+
+endif()
